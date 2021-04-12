@@ -1,0 +1,38 @@
+## Faça todos os gráficos utilizando um tema que você ache mais adequado
+## e nomeie os eixos x e y da maneira adequada
+
+## Carregue o banco world do pacote poliscidata
+
+install.packages( "poliscidata" )
+install.packages( "tidyverse" )
+install.packages( "ggthemes" )
+install.packages( "vcd" )
+install.packages( "stargazer" )
+
+library( poliscidata )
+library( tidyverse )
+library( ggthemes )
+library( graphics )
+library( vcd )
+
+banco <- world
+
+str( banco )
+
+tabela <- table( banco$democ_regime08, banco$muslim )
+
+str( tabela )
+
+assoc( tabela, shade = TRUE )
+
+banco %>% filter( !is.na( gdppcap08 ),
+                  !is.na( democ_regime08 ) ) %>%
+  group_by( democ_regime08 ) %>%
+  summarise( media = mean( gdppcap08 ),
+             mediana = median( gdppcap08 ),
+             desvio = sd( gdppcap08 ),
+             n = n( ) )
+
+reg_lin <- lm( gdppcap08 ~ dem_score14, data = banco )
+
+str( reg_lin )
