@@ -1,4 +1,4 @@
-stall.packages( 'XML' )
+install.packages( 'XML' )
 install.packages( 'rjson' )
 install.packages( 'readxl' )
 
@@ -35,3 +35,7 @@ wikipedia_excel_url <- "https://pt.wikipedia.org/wiki/Microsoft_Excel"
 wikipedia_excel <- read_html( wikipedia_txt_url )
 
 wikipedia_excel <- wikipedia_excel %>% html_nodes( "ul" )
+
+###
+
+Sigmod_xml <- xmlToDataFrame( "http://aiweb.cs.washington.edu/research/projects/xmltk/xmldata/data/sigmod-record/SigmodRecord.xml" )
