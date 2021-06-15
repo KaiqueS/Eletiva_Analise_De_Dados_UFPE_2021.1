@@ -3,25 +3,25 @@ library( data.table )
 library( plotly )
 library( EnvStats )
 
-covid19PE <- fread('https://dados.seplag.pe.gov.br/apps/basegeral.csv')
+covid <- fread('https://dados.seplag.pe.gov.br/apps/basegeral.csv')
 
-covid19PEMun <- covid19PE %>% count( municipio, sort = T, name = 'casos2' ) %>%
-                mutate(casos2 = sqrt( casos2 ), casosLog = log10( casos2 ) )
+covidMun <- covid %>% count( municipio, sort = T, name = 'casos2' ) %>%
+            mutate(casos2 = sqrt( casos2 ), casosLog = log10( casos2 ) )
 
-plot_ly(y = covid19PEMun$casos2, type = "box", text = covid19PEMun$municipio, 
-                                               boxpoints = "all", jitter = 0.3 )
+plot_ly(y = covidMun$casos2, type = "box", text = covidMun$municipio, 
+                                           boxpoints = "all", jitter = 0.3 )
 
-boxplot.stats( covid19PEMun$casos2 )$out
-boxplot.stats( covid19PEMun$casos2, coef = 2 )$out
+boxplot.stats( covidMun$casos2 )$out
+boxplot.stats( covidMun$casos2, coef = 2 )$out
 
-covid19PEOut <- boxplot.stats(covid19PEMun$casos2 )$out
-covid19PEOutIndex <- which( covid19PEMun$casos2 %in% c( covid19PEOut ) )
-covid19PEOutIndex
+covidOut <- boxplot.stats(covidMun$casos2 )$out
+covidOutIndex <- which( covidMun$casos2 %in% c( covidOut ) )
+covidOutIndex
 
-lower_bound <- median( covid19PEMun$casos2 ) - 3 * mad( covid19PEMun$casos2, constant = 1 )
-upper_bound <- median( covid19PEMun$casos2 ) + 3 * mad( covid19PEMun$casos2, constant = 1 )
-( outlier_ind <- which( covid19PEMun$casos2 < lower_bound | covid19PEMun$casos2 > upper_bound ) )
+lower_bound <- median( covidMun$casos2 ) - 3 * mad( covidMun$casos2, constant = 1 )
+upper_bound <- median( covidMun$casos2 ) + 3 * mad( covidMun$casos2, constant = 1 )
+( outlier_ind <- which( covidMun$casos2 < lower_bound | covidMun$casos2 > upper_bound ) )
 
-covid19PERosner <- rosnerTest( covid19PEMun$casos2, k = 10 )
-covid19PERosner
-covid19PERosner$all.stats
+covidRosner <- rosnerTest( covidMun$casos2, k = 10 )
+covidRosner
+covidRosner$all.stats
