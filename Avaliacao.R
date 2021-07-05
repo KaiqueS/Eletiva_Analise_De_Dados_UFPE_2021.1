@@ -44,6 +44,22 @@ base_covid_PE <- base_covid_PE %>%
                  mutate( confirmados = case_when( classe == "CONFIRMADO" ~ 1,
                                                   classe != "CONFIRMADO" ~ 0 ) )
 
+base_covid_PE <- base_covid_PE %>% 
+                 mutate( obito = case_when( !is.na( dt_obito ) ~ 1,
+                                             is.na( dt_obito ) == NA ~ 0 ) )
+
 incidencia <- aggregate( base_covid_PE$confirmados ~ base_covid_PE$municipio + base_covid_PE$semana_epidemiologica, data = base_covid_PE, FUN = sum )
 
 colnames( incidencia ) <- c( "municipio", "semana", "confirmados" )
+
+incidencia <- left_join( incidencia, tabela6579, by = "municipio" )
+
+incidencia <- incidencia %>% mutate( incidencia = ( as.numeric( incidencia$confirmados ) * 100000 ) / as.numeric( incidencia$populacao ) )
+
+obitos <- aggregate( base_covid_PE$obito ~ base_covid_PE$municipio + base_covid_PE$semana_epidemiologica, data = base_covid_PE, FUN = sum )
+
+colnames( obitos ) <- c( "municipio", "semana", "obitos" )
+
+obitos <- left_join( obitos, tabela6579, by = "municipio" )
+
+obitos <- obitos %>% mutate( obitos = ( as.numeric( obitos ) * 100000 ) / as.numeric( populacao ) )
